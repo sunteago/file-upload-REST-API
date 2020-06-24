@@ -12,7 +12,6 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 connectDB();
-
 const corsOpts = {
     origin: process.env.FRONTEND_URL
 }
