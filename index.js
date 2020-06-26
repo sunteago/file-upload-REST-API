@@ -19,6 +19,8 @@ app.use(cors(corsOpts));
 
 app.use(express.json());
 
+app.use(express.static("uploads"));
+
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/links', links);

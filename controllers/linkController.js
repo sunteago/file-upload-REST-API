@@ -9,11 +9,11 @@ exports.newLink = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { filename } = req.body;
+  const { filename, name } = req.body;
 
   const link = new Link();
   link.url = shortid.generate();
-  link.name = shortid.generate();
+  link.name = name;
   link.filename = filename;
 
   if (req.user) {
@@ -47,16 +47,13 @@ exports.getLink = async (req,res,next) => {
     }
 
     res.json({file: link.name});
+  };
 
-    const {downloads, name} = link;
-
-    if(downloads === 1) {
-        req.file = name;
-        await Link.findOneAndRemove(url);
-        next();
-    } else {
-        link.downloads--;
-        await link.save();
-    }
-};
-
+exports.getLinks = async (req,res) => {
+  try {
+    const links = await Link.find({}).select('url -_id');
+    res.json({links});
+  } catch (err) {
+    console.log(err);
+  }
+}

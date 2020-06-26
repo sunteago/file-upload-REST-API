@@ -1,6 +1,7 @@
 const multer = require("multer");
 const shortid = require("shortid");
 const fs = require('fs');
+const Link = require('../models/Link');
 
 exports.uploadFile = async (req, res, next) => {
   const multerConfig = {
@@ -41,3 +42,24 @@ exports.deleteFile = async (req, res, next) => {
         console.log(err);
     }
 };
+
+exports.downloadFile = async (req,res, next) => {
+  const {file} = req.params
+  const link = await Link.findOne({name: file})
+  
+  const downloadLink = __dirname + '/../uploads/' + file;
+  res.download(downloadLink);  
+  
+  const {downloads, name} = link;
+
+  if(downloads === 1) {
+      req.file = name;
+      await Link.findOneAndRemove(link.id);
+      next();
+  } else {
+      link.downloads--;
+      await link.save();
+  }
+
+
+}

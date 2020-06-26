@@ -1,8 +1,7 @@
 const router = require("express").Router();
-const { newLink, getLink } = require("../controllers/linkController");
+const { newLink, getLink, getLinks } = require("../controllers/linkController");
 const { check } = require("express-validator");
 const authMiddleware = require("../middleware/auth");
-const {deleteFile} = require('../controllers/filesController');
 
 router.post('/',
     authMiddleware,
@@ -11,6 +10,10 @@ router.post('/',
     newLink
 );
 
-router.get('/:url', getLink, deleteFile)
+router.get('/',
+    getLinks
+)
+
+router.get('/:url', getLink)
 
 module.exports = router;
